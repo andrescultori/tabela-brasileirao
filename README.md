@@ -4,6 +4,8 @@ Script de Google Apps Script que transforma uma Google Sheets num painel automá
 
 Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratuito, API v4, competição `BSA`).
 
+**[→ Ver ao vivo](https://docs.google.com/spreadsheets/d/1ZZVtyysMpz62xIB6whuDV7FEAt12zvLaVvxH41BKzh8/edit?gid=1262484430#gid=1262484430)**
+
 ## Funcionalidades
 
 - **Popular tabela**: busca o calendário completo da temporada (380 jogos) e escreve na aba `Tabela`
