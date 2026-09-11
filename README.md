@@ -4,7 +4,7 @@ Script de Google Apps Script que transforma uma Google Sheets num painel automá
 
 Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratuito, API v4, competição `BSA`).
 
-**[→ Ver ao vivo](https://docs.google.com/spreadsheets/d/1ZZVtyysMpz62xIB6whuDV7FEAt12zvLaVvxH41BKzh8/edit?gid=1262484430#gid=1262484430)**
+> Este repositório serve como **backup e histórico** do código. O código roda direto no Apps Script vinculado à planilha — não há integração automática entre este repositório e o Apps Script (sem clasp). Atualizações são feitas manualmente: copia o conteúdo de `src/Codigo.gs` e cola no editor do Apps Script.
 
 ## Funcionalidades
 
@@ -22,40 +22,17 @@ Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratu
 ├── src/
 │   ├── Codigo.gs         → todo o código do script
 │   └── appsscript.json   → manifesto do projeto Apps Script
-├── .clasp.json.example   → template de configuração do clasp (copie para .clasp.json)
-├── .claspignore
-├── .gitignore
-├── package.json
 └── README.md
 ```
 
 ## Como usar
-
-### Opção A — copiar e colar manualmente (mais simples, sem instalar nada)
 
 1. Crie (ou abra) a Google Sheets onde os dados vão morar
 2. **Extensões → Apps Script**
 3. Apague o conteúdo padrão e cole o conteúdo de [`src/Codigo.gs`](src/Codigo.gs)
 4. Salve
 
-### Opção B — via [clasp](https://github.com/google/clasp) (recomendado se for versionar/editar por aqui)
-
-```bash
-npm install
-npm run login          # autentica com sua conta Google
-```
-
-Crie o projeto Apps Script vinculado à planilha (via Extensões → Apps Script na própria planilha, ou `clasp create`), pegue o **Script ID** em Configurações do projeto (⚙️) e:
-
-```bash
-cp .clasp.json.example .clasp.json
-# edite .clasp.json e cole o scriptId
-npm run push            # envia o código local pro Apps Script
-```
-
-Depois de qualquer alteração no `src/Codigo.gs`, rode `npm run push` de novo pra sincronizar.
-
-### Configuração inicial (fazer 1 vez, direto na planilha/editor)
+### Configuração inicial (fazer 1 vez)
 
 1. Ajuste `CONFIG.SHEET_NAME` em `Codigo.gs` pro nome real da aba de jogos (padrão: `'Tabela'`)
 2. Crie uma conta gratuita em [football-data.org](https://www.football-data.org/client/register) e copie o token (X-Auth-Token) recebido por e-mail
@@ -87,3 +64,7 @@ As abas `Classificação` e `PERFIL DE TIME` são criadas e mantidas automaticam
 - Atualizar Perfil de Time
 - Ativar atualização automática diária
 - Configurar token da API
+
+## Atualizando este repositório
+
+Sempre que o código no Apps Script for alterado, copie o conteúdo atualizado pra `src/Codigo.gs` aqui e faça o commit — mantém este repositório como um histórico fiel do que está rodando na planilha.
