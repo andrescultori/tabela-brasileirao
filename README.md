@@ -1,12 +1,40 @@
-# Brasileirão Apps Script
+🇧🇷 Português | [🇺🇸 English](README.en.md)
+
+# 📊 Tabela do Brasileirão — Apps Script
+
+Planilha do Campeonato Brasileiro Série A que se atualiza sozinha: calendário, resultados, classificação e probabilidades de título, Libertadores e rebaixamento — direto no Google Sheets.
 
 Script de Google Apps Script que transforma uma Google Sheets num painel automático do **Campeonato Brasileiro Série A**: popula o calendário de jogos, atualiza os resultados diariamente, e calcula classificação, projeção de pontos e probabilidades (título / Libertadores / rebaixamento) via simulação Monte Carlo.
 
 Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratuito, API v4, competição `BSA`).
 
+**[→ Ver ao vivo](https://docs.google.com/spreadsheets/d/1ZZVtyysMpz62xIB6whuDV7FEAt12zvLaVvxH41BKzh8/edit?gid=1262484430#gid=1262484430)**
+
 > Este repositório serve como **backup e histórico** do código. O código roda direto no Apps Script vinculado à planilha — não há integração automática entre este repositório e o Apps Script (sem clasp). Atualizações são feitas manualmente: copia o conteúdo de `src/Codigo.gs` e cola no editor do Apps Script.
 
-## Funcionalidades
+## O problema original
+
+Antes desse script, acompanhar o Brasileirão numa planilha significava atualizar os placares na mão jogo a jogo, recalcular a classificação com fórmulas frágeis que quebravam a cada rodada, e não ter nenhuma noção real de "quem ainda tem chance de título ou de cair" sem fazer conta por fora. Qualquer projeção de tabela final virava tentativa e erro.
+
+## A solução
+
+```
+football-data.org (API v4, competição BSA)
+        ↓
+popularTabela() → grade completa da temporada na aba Tabela
+        ↓
+atualizarResultados() → roda 1x/dia via gatilho, preenche os placares
+        ↓
+calcularClassificacao() → pontos, saldo, aproveitamento, previsão de pontos
+        ↓
+calcularProbabilidades() → simulação Monte Carlo (1.000 rodadas), sob demanda
+        ↓
+atualizarPerfilTime() → posição, zona e histórico por time, via dropdown
+```
+
+Na prática: abre a planilha, o menu **Brasileirão** já está lá, roda "Popular tabela" uma vez e o resto fica sozinho — sem tocar em fórmula nem copiar placar de site nenhum.
+
+## O painel em si
 
 - **Popular tabela**: busca o calendário completo da temporada (380 jogos) e escreve na aba `Tabela`
 - **Atualizar resultados**: busca jogos encerrados e preenche os placares — roda manualmente ou por gatilho diário automático
@@ -14,6 +42,20 @@ Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratu
 - **Pontuação Final Prevista**: projeção determinística baseada num índice de força (aproveitamento + saldo por jogo) de cada time
 - **Probabilidades via Monte Carlo**: roda o campeonato 1.000 vezes simulando os jogos restantes probabilisticamente, calculando % de título, classificação à Libertadores (G6) e rebaixamento (Z4)
 - **Perfil de Time** (aba gerada automaticamente): dropdown pra escolher um time e ver posição atual + zona (Líder/Libertadores/Sul-Americana/Rebaixamento), estatísticas casa x fora, e o histórico completo de jogos com o resultado (V/E/D) do ponto de vista dele — atualiza sozinha ao trocar o time no dropdown
+
+## Stack técnica
+
+| Camada | Tecnologia |
+|---|---|
+| Runtime | Google Apps Script (V8) |
+| Interface | Google Sheets (menu customizado + dropdown) |
+| Dados | football-data.org API v4 (REST, plano gratuito) |
+| Credencial | `PropertiesService` (Script Properties, nunca hardcoded) |
+| Simulação | Monte Carlo (1.000 simulações) implementada em JS puro |
+
+### Por que sem clasp
+
+O repositório não usa [clasp](https://github.com/google/clasp) pra sincronizar com o Apps Script — decisão deliberada: pra um script pessoal de uma única planilha, manter um fluxo manual de copiar/colar (ver "Atualizando este repositório" abaixo) é mais simples do que manter autenticação OAuth e configuração de `.clasp.json` só pra isso. O repositório funciona como backup e histórico do código que está rodando na planilha, não como pipeline de deploy.
 
 ## Estrutura do repositório
 
@@ -25,7 +67,7 @@ Fonte de dados: [football-data.org](https://www.football-data.org/) (plano gratu
 └── README.md
 ```
 
-## Como usar
+## Rodando (como importar)
 
 1. Crie (ou abra) a Google Sheets onde os dados vão morar
 2. **Extensões → Apps Script**
@@ -68,3 +110,11 @@ As abas `Classificação` e `PERFIL DE TIME` são criadas e mantidas automaticam
 ## Atualizando este repositório
 
 Sempre que o código no Apps Script for alterado, copie o conteúdo atualizado pra `src/Codigo.gs` aqui e faça o commit — mantém este repositório como um histórico fiel do que está rodando na planilha.
+
+---
+
+*As probabilidades e a pontuação prevista são estimativas estatísticas baseadas no desempenho atual de cada time — não uma previsão garantida do campeonato.*
+
+---
+
+Desenvolvido por [André Scultori](https://github.com/andrescultori) · © 2026 · [GitHub](https://github.com/andrescultori/tabela-brasileirao)
